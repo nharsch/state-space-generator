@@ -215,15 +215,32 @@ const StateSpaceGenerator = () => {
                 
                 {states.length > 0 ? (
                   <div className="max-h-96 overflow-auto">
-                    <div className="space-y-2">
-                      {states.map((state, index) => (
-                        <div key={index} className="bg-white p-3 rounded border text-sm">
-                          <div className="font-mono text-gray-800">
-                            State {index + 1}: {JSON.stringify(state)}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <table className="w-full text-sm border-collapse">
+                      <thead>
+                        <tr className="bg-gray-100 sticky top-0">
+                          <th className="border border-gray-300 px-3 py-2 text-left font-medium text-gray-700">#</th>
+                          {Object.keys(states[0]).map(header => (
+                            <th key={header} className="border border-gray-300 px-3 py-2 text-left font-medium text-gray-700">
+                              {header}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {states.map((state, index) => (
+                          <tr key={index} className="hover:bg-gray-50">
+                            <td className="border border-gray-300 px-3 py-2 text-gray-600 font-mono">
+                              {index + 1}
+                            </td>
+                            {Object.keys(states[0]).map(key => (
+                              <td key={key} className="border border-gray-300 px-3 py-2 font-mono">
+                                {state[key]}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 ) : (
                   <div className="text-gray-500 text-center py-8">
