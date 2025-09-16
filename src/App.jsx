@@ -71,17 +71,25 @@ const StateSpaceGenerator = () => {
     return generateStates(variables.filter(v => v.name && v.domain.length > 0));
   }, [variables]);
 
-  const exportJSON = () => {
-    const data = {
-      variables,
-      states,
-      totalStates: states.length
-    };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const exportCSV = () => {
+    if (states.length === 0) return;
+    
+    // Get all variable names as headers
+    const headers = Object.keys(states[0]);
+    
+    // Create CSV content
+    const csvContent = [
+      headers.join(','), // Header row
+      ...states.map(state => 
+        headers.map(header => `"${state[header]}"`).join(',')
+      )
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'state-space.json';
+    a.download = 'state-space.csv';
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -190,7 +198,7 @@ const StateSpaceGenerator = () => {
                     Copy
                   </button>
                   <button
-                    onClick={exportJSON}
+                    onClick={exportCSV}
                     className="flex items-center gap-2 bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition-colors"
                     disabled={states.length === 0}
                   >
